@@ -1,0 +1,102 @@
+﻿@model HW5.Models.StudentVM
+
+<h1>Students</h1>
+
+@using (Html.BeginForm("StudentSearch", "Home", FormMethod.Post, new { @class = "form-inline" }))
+{
+    <form class="form-inline">
+        <div class="form-group">
+        @*Search using the name of the student *@
+            <input type="text" class="form-control" placeholder="Search Student Name" name="name" />
+        </div>
+        <div class="form-group">
+            <select class="form-control" name="_class">
+                @* Search by choosing the class *@
+                <option value="none">Select a Class</option>
+                @foreach (var opt in Model.Class)
+                {
+                    <option value="@opt.Name">@opt.Name</option>
+                }
+            </select>
+        </div>
+
+        <select class="form-control" name="bookId" style="display: none">
+            <option value="@Model.Book.ID">Select a Class</option>
+
+        </select>
+
+
+        @* Search button for searching the Student *@
+        <div class="form-group">
+            <input type="submit" value="Search" style="width:150px" class="btn btn-success form-control" />
+        </div>
+
+        @* Clear button to clear the search results *@
+        <div class="form-group">
+            @Html.ActionLink("Clear", "Students", "Home", new { bookId = Model.Book.ID }, new { @class = "btn btn-danger form-control" })
+        </div>
+
+
+    </form>
+}
+@* Create table that holds the relevant headings *@
+<table class="table">
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Surname
+        </th>
+        <th>
+            Class
+        </th>
+        <th>
+            Points
+        </th>
+
+        @if (Model.Students.Where(x => x.Book == true).Count() >= 1)
+        {
+            <th>Return Book</th>
+        }
+        else
+        {
+            <th>Borrow Book</th>
+        }
+
+
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.Students)
+    {
+        <tr>
+            <td>
+                @item.Name
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Surname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Class)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Points)
+            </td>
+
+            <td>
+                @* Borrow and Return functions are specified and returns to the specified page *@
+                @if (item.Book == true)
+                {
+                    @Html.ActionLink("Return book", "ReturnBook", new { studentId = item.Id, bookId = Model.Book.ID })
+                }
+                @if (item.Book == false && Model.Students.Where(x => x.Book == true).Count() == 0)
+                {
+                    @Html.ActionLink("Borrow Book", "BorrowBook", new { studentId = item.Id, bookId = Model.Book.ID })
+                }
+
+            </td>
+        </tr>
+    }
+
+</table>

@@ -1,0 +1,68 @@
+﻿@model HW5.Models.BookDetailsVM
+
+<h2>@* Book name and status displayed, Book Availabe or Book Out *@
+    @Model.Book.Name -
+    @if (Model.Book.Status == "Book Out")
+    {
+        <span style="color:red">Book Out</span>
+    }
+    else
+    {
+        <span style="color:green">Available</span>
+    }
+</h2>
+
+<div class="d-flex">
+    <div class="d-inline-block"
+         @* Count the number of time the book has been borrowed *@>
+        <h3># Number of Borrows - @Model.BorrowedBooks.Count()</h3>
+    </div>
+    @* Create View Student button *@
+    <div class="d-inline-block">
+        @Html.ActionLink("View Student", "Students", new { bookId = Model.Book.ID }, new { @class = "btn btn-info" })
+    </div>
+</div>
+
+@* Create table to display the specified columns *@
+<table class="table">
+    <tr>
+        <th>
+            BorrowID
+        </th>
+        <th>
+            BookID
+        <th>
+            TakenDate
+        </th>
+        <th>
+            BroughtDate
+        </th>
+        <th>
+            Borrowed By
+        </th>
+
+    </tr>
+
+    @foreach (var item in Model.BorrowedBooks)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.BorrowID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BookID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TakenDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BroughtDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StudentName)
+            </td>
+
+        </tr>
+    }
+
+</table>
